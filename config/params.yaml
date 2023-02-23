@@ -38,7 +38,7 @@
 # aws_racetrack - x: 2.75 - y: -15.0  - z: 0.2 - roll: 0.0 - pitch: 0.0 - yaw:  0.0
 
 robocup2023:
-  simulation: false
+  simulation: true
   world: aws_house
   robot_position:
     x: 0.0
