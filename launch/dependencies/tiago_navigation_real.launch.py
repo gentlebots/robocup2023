@@ -23,21 +23,23 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration, PythonExpression, PathJoinSubstitution
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
     # Get the launch directory
     robots_dir = get_package_share_directory('robocup2023')
     bringup_dir = get_package_share_directory('nav2_bringup')
+    slam_dir = get_package_share_directory('slam_toolbox')
     launch_dir = os.path.join(bringup_dir, 'launch')
+    slam_launch_dir = os.path.join(slam_dir, 'launch')
 
     # Create the launch configuration variables
     slam = LaunchConfiguration('slam')
     namespace = LaunchConfiguration('namespace')
     use_namespace = LaunchConfiguration('use_namespace')
     map_yaml_file = LaunchConfiguration('map')
-    map_posegraph_file = LaunchConfiguration('posegraph')
     use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = LaunchConfiguration('params_file')
     slam_params_file = LaunchConfiguration('slam_params_file')
@@ -62,7 +64,7 @@ def generate_launch_description():
 
     declare_slam_cmd = DeclareLaunchArgument(
         'slam',
-        default_value='false',
+        default_value='True',
         description='Whether run a SLAM')
 
     config = os.path.join(robots_dir, 'config', 'params.yaml')
@@ -129,13 +131,11 @@ def generate_launch_description():
                           'rviz_config': rviz_config_file}.items())
 
     slam_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'slam_launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(slam_launch_dir, 'online_async_launch.py')),
         condition=IfCondition(slam),
         launch_arguments={'namespace': namespace,
                           'use_sim_time': use_sim_time,
                           'autostart': autostart,
-                          'map_file_name': map_posegraph_file,
-                          'map_start_at_dock': True,
                           'use_respawn': use_respawn,
                           'slam_params_file': slam_params_file}.items())
 
