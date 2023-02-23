@@ -38,6 +38,7 @@ def generate_launch_description():
     slam = LaunchConfiguration('slam')
     map_yaml_file = LaunchConfiguration('map')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    slam_params_file = LaunchConfiguration('slam_params_file')
     autostart = LaunchConfiguration('autostart')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
 
@@ -45,6 +46,11 @@ def generate_launch_description():
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
         default_value=os.path.join(robots_dir, 'params', 'tiago_nav_params_sim.yaml'),
+        description='Full path to the ROS2 parameters file to use for all launched nodes')
+
+    declare_slam_params_file_cmd = DeclareLaunchArgument(
+        'slam_params_file',
+        default_value=os.path.join(robots_dir, 'params', 'mapper_params_online_async.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_slam_cmd = DeclareLaunchArgument(
@@ -77,11 +83,11 @@ def generate_launch_description():
 
     nav2_bringup_cmd_group = GroupAction([
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'slam_launch.py')),
+            PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'online_async_launch.py')),
             condition=IfCondition(slam),
             launch_arguments={'use_sim_time': use_sim_time,
                               'autostart': autostart,
-                              'params_file': params_file}.items()),
+                              'slam_params_file': slam_params_file}.items())
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch',
@@ -126,6 +132,7 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(scan_remap)
     ld.add_action(declare_params_file_cmd)
+    ld.add_action(declare_slam_params_file_cmd)
     ld.add_action(declare_slam_cmd)
     ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_use_sim_time_cmd)
