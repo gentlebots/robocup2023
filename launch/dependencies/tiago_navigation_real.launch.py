@@ -37,8 +37,10 @@ def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
     use_namespace = LaunchConfiguration('use_namespace')
     map_yaml_file = LaunchConfiguration('map')
+    map_posegraph_file = LaunchConfiguration('posegraph')
     use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = LaunchConfiguration('params_file')
+    slam_params_file = LaunchConfiguration('slam_params_file')
     autostart = LaunchConfiguration('autostart')
     use_composition = LaunchConfiguration('use_composition')
     use_respawn = LaunchConfiguration('use_respawn')
@@ -60,7 +62,7 @@ def generate_launch_description():
 
     declare_slam_cmd = DeclareLaunchArgument(
         'slam',
-        default_value='False',
+        default_value='false',
         description='Whether run a SLAM')
 
     config = os.path.join(robots_dir, 'config', 'params.yaml')
@@ -77,6 +79,11 @@ def generate_launch_description():
         default_value=os.path.join(robots_dir, 'maps', conf['robocup2023']['world']+'.yaml'),
         description='Full path to map yaml file to load')
 
+    declare_map_posegraph_cmd = DeclareLaunchArgument(
+        'posegraph',
+        default_value=os.path.join(robots_dir, 'maps', conf['robocup2023']['world']),
+        description='Full path to map yaml file to load')
+
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
@@ -85,6 +92,11 @@ def generate_launch_description():
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
         default_value=os.path.join(robots_dir, 'params', 'tiago_nav_params_real.yaml'),
+        description='Full path to the ROS2 parameters file to use for all launched nodes')
+
+    declare_slam_params_file_cmd = DeclareLaunchArgument(
+        'slam_params_file',
+        default_value=os.path.join(robots_dir, 'params', 'mapper_params_online_async.yaml'),
         description='Full path to the ROS2 parameters file to use for all launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(
@@ -122,8 +134,10 @@ def generate_launch_description():
         launch_arguments={'namespace': namespace,
                           'use_sim_time': use_sim_time,
                           'autostart': autostart,
+                          'map_file_name': map_posegraph_file,
+                          'map_start_at_dock': True,
                           'use_respawn': use_respawn,
-                          'params_file': params_file}.items())
+                          'slam_params_file': slam_params_file}.items())
 
     localization_cmd = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(launch_dir, 'localization_launch.py')),
@@ -158,8 +172,10 @@ def generate_launch_description():
     ld.add_action(declare_use_namespace_cmd)
     ld.add_action(declare_slam_cmd)
     ld.add_action(declare_map_yaml_cmd)
+    ld.add_action(declare_map_posegraph_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_params_file_cmd)
+    ld.add_action(declare_slam_params_file_cmd)
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_composition_cmd)
     ld.add_action(declare_rviz_config_file_cmd)

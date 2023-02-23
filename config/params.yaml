@@ -39,7 +39,7 @@
 
 robocup2023:
   simulation: true
-  world: aws_house
+  world: laboratorio_bueno
   robot_position:
     x: 0.0
     y: 0.0
