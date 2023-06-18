@@ -16,6 +16,7 @@
 
 import os
 import yaml
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -40,8 +41,41 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
+    graph_map_file = LaunchConfiguration('graph_map')
+
+    config = os.path.join(robots_dir, 'config', 'params.yaml')
+    with open(config, "r") as stream:
+        try:
+            conf = (yaml.safe_load(stream))
+
+        except yaml.YAMLError as exc:
+            print(exc)
 
     # Declare the launch arguments
+    declare_graph_map_file_cmd = DeclareLaunchArgument(
+        'graph_map',
+        default_value=os.path.join(robots_dir, 'maps', conf['robocup2023']['graph_map']),
+        description='Full path to map yaml file to load')
+
+    slam_config_path = os.path.join(robots_dir, 'params', 'tiago_nav_params_sim.yaml')
+
+    with open(slam_config_path, 'r') as stream:
+        try:
+            slam_config = yaml.safe_load(stream)
+
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    slam_config['slam_toolbox']['ros__parameters']['map_file_name'] = os.path.join(robots_dir, 'maps', conf['robocup2023']['graph_map'])
+    slam_config['slam_toolbox']['ros__parameters']['map_start_pose'] = list(conf['robocup2023']['robot_position'].values())
+
+    with open(slam_config_path, 'w') as stream:
+        try:
+            yaml.dump(slam_config, stream)
+
+        except yaml.YAMLError as exc:
+            print(exc)
+
     declare_params_file_cmd = DeclareLaunchArgument(
         'params_file',
         default_value=os.path.join(robots_dir, 'params', 'tiago_nav_params_sim.yaml'),
@@ -52,19 +86,11 @@ def generate_launch_description():
         default_value='False',
         description='Whether run a SLAM')
 
-    config = os.path.join(robots_dir, 'config', 'params.yaml')
-
-    with open(config, "r") as stream:
-        try:
-            conf = (yaml.safe_load(stream))
-
-        except yaml.YAMLError as exc:
-            print(exc)
-
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
         default_value=os.path.join(robots_dir, 'maps', conf['robocup2023']['world']+'.yaml'),
         description='Full path to map yaml file to load')
+    
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
@@ -76,6 +102,8 @@ def generate_launch_description():
         description='Automatically startup the nav2 stack')
 
     nav2_bringup_cmd_group = GroupAction([
+        SetRemap(src='/cmd_vel', dst='/nav_vel'),
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'slam_launch.py')),
             condition=IfCondition(slam),
@@ -94,8 +122,8 @@ def generate_launch_description():
                               'use_lifecycle_mgr': 'false'}.items()),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(robots_dir, 'launch',
-                                          'dependencies', 'navigation_launch_sim.py')),
+            PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch',
+                                                        'navigation_launch.py')),
             launch_arguments={'use_sim_time': use_sim_time,
                               'autostart': autostart,
                               'params_file': params_file,
@@ -128,6 +156,7 @@ def generate_launch_description():
     ld.add_action(declare_params_file_cmd)
     ld.add_action(declare_slam_cmd)
     ld.add_action(declare_map_yaml_cmd)
+    ld.add_action(declare_graph_map_file_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_rviz_config_file_cmd)

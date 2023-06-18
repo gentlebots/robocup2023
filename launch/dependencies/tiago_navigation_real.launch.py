@@ -42,16 +42,42 @@ def generate_launch_description():
     autostart = LaunchConfiguration('autostart')
     use_composition = LaunchConfiguration('use_composition')
     use_respawn = LaunchConfiguration('use_respawn')
+    graph_map_file = LaunchConfiguration('graph_map')
 
     # Launch configuration variables specific to simulation
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
 
+    config = os.path.join(robots_dir, 'config', 'params.yaml')
+    with open(config, "r") as stream:
+        try:
+            conf = (yaml.safe_load(stream))
+
+        except yaml.YAMLError as exc:
+            print(exc)
+
     # Declare the launch arguments
+    declare_graph_map_file_cmd = DeclareLaunchArgument(
+        'graph_map',
+        default_value=os.path.join(robots_dir, 'maps', conf['robocup2023']['graph_map']),
+        description='Full path to map yaml file to load')
+
     declare_namespace_cmd = DeclareLaunchArgument(
         'namespace',
         default_value='',
         description='Top-level namespace')
+    
+    slam_config_path = os.path.join(robots_dir, 'params', 'tiago_nav_params_real.yaml')
+
+    with open(slam_config_path, 'r') as stream:
+        try:
+            slam_config = yaml.safe_load(stream)
+
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    slam_config['slam_toolbox']['ros__parameters']['map_file_name'] = os.path.join(robots_dir, 'maps', conf['robocup2023']['graph_map'])
+    slam_config['slam_toolbox']['ros__parameters']['map_start_pose'] = list(conf['robocup2023']['robot_position'].values())
 
     declare_use_namespace_cmd = DeclareLaunchArgument(
         'use_namespace',
@@ -157,6 +183,7 @@ def generate_launch_description():
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_use_namespace_cmd)
     ld.add_action(declare_slam_cmd)
+    ld.add_action(declare_graph_map_file_cmd)    
     ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_params_file_cmd)
