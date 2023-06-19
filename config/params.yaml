@@ -42,7 +42,7 @@ robocup2023:
   world: aws_house
   graph_map: a
   robot_position:
-    x: 2.0
+    x: 0.0
     y: 0.0
     yaw: 0.0
   gazebo_gui: false

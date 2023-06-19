@@ -340,7 +340,7 @@ slam_toolbox:
     map_file_name: /home/juan/Workspaces/phd_ws/install/robocup2023/share/robocup2023/maps/a
     map_frame: map
     map_start_pose:
-    - 2.0
+    - 0.0
     - 0.0
     - 0.0
     map_update_interval: 5.0
