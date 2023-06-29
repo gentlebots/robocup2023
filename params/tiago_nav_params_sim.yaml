@@ -13,7 +13,7 @@ amcl:
     global_frame_id: map
     initial_pose:
       x: 0.0
-      y: 0.0
+      y: 1.0
       yaw: 0.0
       z: 0.0
     lambda_short: 0.1

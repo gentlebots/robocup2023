@@ -27,6 +27,7 @@ from launch.substitutions import LaunchConfiguration
 
 from launch_pal.include_utils import include_launch_py_description
 
+
 from launch_ros.actions import Node
 
 
@@ -143,6 +144,6 @@ def generate_launch_description():
 
     ld.add_action(moveit_arg)
     ld.add_action(move_group)
-    ld.add_action(tuck_arm)
+    # ld.add_action(tuck_arm)
 
     return ld
