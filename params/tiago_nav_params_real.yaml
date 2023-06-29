@@ -307,11 +307,10 @@ mh_amcl:
     reseed_percentage_losers: 0.9
     reseed_percentage_winners: 0.03
     rotation_noise: 0.1
+    set_initial_pose: true
     translation_noise: 0.1
     use_sim_time: false
     very_low_q_hypo_thereshold: 0.1
-    set_initial_pose: true
-
 planner_server:
   ros__parameters:
     GridBased:
