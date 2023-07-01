@@ -26,7 +26,7 @@ def generate_launch_description():
     yolo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(yolo_dir,'launch', 'yolov8.launch.py')),
         launch_arguments={'input_image_topic': '/camera/color/image_raw',
-                          'threshold':'0.7'}.items())  # change to /xtion/rgb/image_raw
+                          'threshold':'0.6'}.items())  # change to /xtion/rgb/image_raw
 
     perception_3d = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(perception_dir, 'launch', 'perception_2d_to_3d.launch.py')),

@@ -3,3 +3,60 @@ repositories:
     type: git
     url: https://github.com/aws-robotics/aws-robomaker-bookstore-world.git
     version: ros2
+repositories:
+  ThirdParty/Groot:
+    type: git
+    url: https://github.com/BehaviorTree/Groot.git
+    version: master
+  ThirdParty/Humble-Noetic:
+    type: git
+    url: https://github.com/Dsobh/Humble-Noetic
+    version: main
+  ThirdParty/audio_common:
+    type: git
+    url: https://github.com/Juancams/audio_common.git
+    version: ros2
+  ThirdParty/carry_my_luggage:
+    type: git
+    url: https://github.com/gentlebots/carry_my_luggage.git
+    version: plansys2
+  ThirdParty/dialogflow_ros2:
+    type: git
+    url: https://github.com/Juancams/dialogflow_ros2.git
+    version: main
+  ThirdParty/gb_dialog:
+    type: git
+    url: https://github.com/juandpenan/gb_dialog.git
+    version: ros2
+  ThirdParty/merlin2:
+    type: git
+    url: https://github.com/MERLIN2-ARCH/merlin2.git
+    version: main
+  ThirdParty/perception_2d_to_3d:
+    type: git
+    url: https://github.com/juandpenan/perception_2d_to_3d.git
+    version: main
+  ThirdParty/receptionist:
+    type: git
+    url: https://github.com/gentlebots/receptionist.git
+    version: plansys2
+  ThirdParty/ros1_bridge:
+    type: git
+    url: https://github.com/juandpenan/ros1_bridge.git
+    version: master
+  ThirdParty/rosidl:
+    type: git
+    url: https://github.com/ros2/rosidl.git
+    version: 0894a84fb80b48fdf367fddca4c83e7197cb8192
+  ThirdParty/rosidl_python:
+    type: git
+    url: https://github.com/knorth55/rosidl_python.git
+    version: fix-141
+  ThirdParty/tiago_moveit_config:
+    type: git
+    url: https://github.com/gentlebots/tiago_moveit_config.git
+    version: humble-devel
+  ThirdParty/yolov8_ros:
+    type: git
+    url: https://github.com/mgonzs13/yolov8_ros.git
+    version: main
