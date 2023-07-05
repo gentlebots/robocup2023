@@ -39,7 +39,7 @@
 
 robocup2023:
   simulation: false
-  world: aws_house
+  world: arena_definitiva
   graph_map: a
   robot_position:
     x: 0.0

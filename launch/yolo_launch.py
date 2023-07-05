@@ -21,30 +21,22 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
     yolo_dir = get_package_share_directory('yolov8_bringup')
     perception_dir = get_package_share_directory('perception_2d_to_3d')
-    camera_dir = get_package_share_directory('astra_camera')
 
     yolo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(yolo_dir,'launch', 'yolov8.launch.py')),
-        launch_arguments={'input_image_topic': '/camera/color/image_raw',
+        launch_arguments={'input_image_topic': '/xtion/rgb/image_raw',
                           'threshold':'0.6'}.items())  # change to /xtion/rgb/image_raw
 
     perception_3d = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(perception_dir, 'launch', 'perception_2d_to_3d.launch.py')),
-        launch_arguments={'camera_depth_info_topic': '/camera/depth/camera_info', # change to /xtion/depth/image_raw
-                          'depth_image_raw_topic': '/camera/depth/image_raw'}.items() # change to /xtion/depth/camera_info
+        launch_arguments={'camera_depth_info_topic': '/xtion/depth/camera_info', # change to /xtion/depth/image_raw
+                          'depth_image_raw_topic': '/xtion/depth/image_raw'}.items() # change to /xtion/depth/camera_info
         )
-    camera = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(camera_dir, 'launch', 'astra_mini.launch.py'))
-        )
-    
-
 
     ld = LaunchDescription()
 
 
     ld.add_action(yolo)
     ld.add_action(perception_3d)
-    ld.add_action(camera)
-
 
     return ld
