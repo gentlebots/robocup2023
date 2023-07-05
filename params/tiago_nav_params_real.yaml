@@ -157,9 +157,9 @@ controller_server:
       decel_lim_x: -2.5
       decel_lim_y: 0.0
       linear_granularity: 0.05
-      max_speed_xy: 0.6
-      max_vel_theta: 0.6
-      max_vel_x: 0.6
+      max_speed_xy: 0.2
+      max_vel_theta: 0.2
+      max_vel_x: 0.2
       max_vel_y: 0.0
       min_speed_theta: 0.0
       min_speed_xy: 0.0
@@ -174,7 +174,7 @@ controller_server:
       vtheta_samples: 20
       vx_samples: 20
       vy_samples: 5
-      xy_goal_tolerance: 0.25
+      xy_goal_tolerance: 0.40
     controller_frequency: 20.0
     controller_plugins:
     - FollowPath
@@ -182,8 +182,8 @@ controller_server:
     general_goal_checker:
       plugin: nav2_controller::SimpleGoalChecker
       stateful: true
-      xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.25
+      xy_goal_tolerance: 0.40
+      yaw_goal_tolerance: 0.40
     goal_checker_plugins:
     - general_goal_checker
     min_theta_velocity_threshold: 0.001
