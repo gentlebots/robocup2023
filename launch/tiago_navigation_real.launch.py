@@ -152,7 +152,7 @@ def generate_launch_description():
                           'rviz_config': rviz_config_file}.items())
 
     nav2_bringup_cmd_group = GroupAction([
-        SetRemap(src='/cmd_vel', dst='/nav_vel'),
+        SetRemap(src='/cmd_vel', dst='/mobile_base_controller/cmd_vel'),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'slam_launch.py')),
